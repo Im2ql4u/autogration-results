@@ -1,0 +1,35 @@
+[project]
+name = "autogration-results"
+version = "0.1.0"
+description = "Result views for Autogration studies: measures, dashboard specs, rendering, health checks and exports."
+requires-python = ">=3.12"
+dependencies = [
+    "duckdb>=1.1",
+    "pandas>=2.2",
+    "pyarrow>=17",
+    "pydantic>=2.8",
+    "pyyaml>=6.0",
+    "plotly>=5.24",
+    "xlsxwriter>=3.2",
+]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.40"]
+agent = ["mcp>=1.2"]
+png = ["kaleido>=0.2"]
+
+[project.scripts]
+autogration-results = "autogration_results.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3", "openpyxl>=3.1"]
+
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/autogration_results"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

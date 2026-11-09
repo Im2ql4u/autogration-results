@@ -1,0 +1,33 @@
+spec_version: 1
+id: data
+order: 70
+title: Data
+question: Give me the numbers in a table I can take elsewhere.
+description: Every table downloads as CSV.
+sections:
+  - title: Annual volumes
+    visuals:
+      - id: annual_by_case
+        type: table
+        title: Annual volumes per case
+        rows: [case, period]
+        grain: year
+        measures: [oil_volume, gas_volume, water_volume, water_injection_volume, oe_volume_mmboe]
+  - title: Monthly profile per well
+    visuals:
+      - id: monthly_per_well
+        type: table
+        title: Monthly rates per well (focus case)
+        rows: [identifier, period]
+        grain: month
+        cases: focus
+        measures:
+          - oil_rate
+          - gas_rate
+          - water_rate
+          - water_injection_rate
+          - gas_lift_rate
+          - cum_oil
+          - cum_gas
+          - reservoir_pressure
+          - wellhead_pressure

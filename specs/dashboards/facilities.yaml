@@ -1,0 +1,40 @@
+spec_version: 1
+id: facilities
+order: 60
+title: Facilities
+question: Are separators and the network operating within limits?
+sections:
+  - title: Separators
+    visuals:
+      - id: sep_pressure
+        type: line
+        title: Separator pressure (focus case)
+        measure: separator_pressure
+        color: identifier
+        cases: focus
+        width: 6
+      - id: sep_temperature
+        type: line
+        title: Separator temperature (focus case)
+        measure: separator_temperature
+        color: identifier
+        cases: focus
+        width: 6
+      - id: sep_oil
+        type: area
+        title: Separator oil rate (focus case)
+        measure: separator_oil_rate
+        color: identifier
+        cases: focus
+        width: 6
+      - id: sep_gas_by_case
+        type: line
+        title: Separator gas rate by case
+        measure: separator_gas_rate
+        color: case
+        width: 6
+      - id: facilities_note
+        type: note
+        note: >-
+          Capacity limits (oil, gas and liquid handling, water injection) are not available yet, so
+          utilisation cannot be shown. Flow assurance results are not exported by Autogration today.

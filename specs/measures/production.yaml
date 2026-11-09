@@ -1,0 +1,229 @@
+# Core production measures. Ported from the Yggdrasil Power BI semantic model where noted (`source`).
+# Units: properties are normalised to SI (Sm3/d, Sm3, bara, degC) before `scale` is applied.
+# 1 Sm3 = 6.28981 bbl; 1000 Sm3 gas = 1 Sm3 oe (NPD convention).
+measures:
+  # --- Rates (calendar-day, i.e. including uptime) -------------------------
+  - id: oil_rate
+    label: Oil rate
+    unit: Sm3/d
+    kind: rate
+    terms: [{property: AvgOilRate, si_unit: Sm3/d}]
+    higher_is_better: true
+    source: Calculations.AvgOilRate_Sm3d
+  - id: gas_rate
+    label: Gas rate
+    unit: kSm3/d
+    kind: rate
+    terms: [{property: AvgGasRate, scale: 1.0e-3, si_unit: Sm3/d}]
+    higher_is_better: true
+    source: Calculations.AvgGasRate_kSm3d
+  - id: water_rate
+    label: Water rate
+    unit: Sm3/d
+    kind: rate
+    terms: [{property: AvgWatRate, si_unit: Sm3/d}]
+    higher_is_better: false
+    source: Calculations.AvgWatRate_Sm3d
+  - id: liquid_rate
+    label: Liquid rate
+    unit: Sm3/d
+    kind: rate
+    terms: [{property: AvgOilRate, si_unit: Sm3/d}, {property: AvgWatRate, si_unit: Sm3/d}]
+    source: Calculations.AvgLiqRate_Sm3d
+  - id: water_injection_rate
+    label: Water injection rate
+    unit: Sm3/d
+    kind: rate
+    terms: [{property: AvgWatInjRate, si_unit: Sm3/d}]
+    source: Calculations.AvgWatInjRate_Sm3d
+  - id: gas_lift_rate
+    label: Gas lift rate
+    unit: kSm3/d
+    kind: rate
+    terms: [{property: AvgGasLift, scale: 1.0e-3, si_unit: Sm3/d}]
+    source: Calculations.AvgGaslift_kSm3d
+  - id: oe_rate
+    label: Oil equivalent rate
+    unit: Sm3oe/d
+    kind: rate
+    terms: [{property: AvgOilRate, si_unit: Sm3/d}, {property: AvgGasRate, scale: 1.0e-3, si_unit: Sm3/d}]
+    higher_is_better: true
+  - id: oe_rate_boepd
+    label: Oil equivalent rate
+    unit: boe/d
+    kind: rate
+    terms: [{property: AvgOilRate, scale: 6.28981}, {property: AvgGasRate, scale: 6.28981e-3}]
+    higher_is_better: true
+    description: Gross, unconverted (separator conditions). Sales BOE needs split factors, see sales_oe_volume_mmboe.
+  # --- Stream-day rates (while producing) ----------------------------------
+  - id: oil_rate_stream
+    label: Oil rate (stream day)
+    unit: Sm3/sd
+    kind: rate
+    terms: [{property: OilRate, si_unit: Sm3/d}]
+    higher_is_better: true
+    source: Calculations.AvgStreamOilRate_SSF_Sm3d
+  - id: gas_rate_stream
+    label: Gas rate (stream day)
+    unit: kSm3/sd
+    kind: rate
+    terms: [{property: GasRate, scale: 1.0e-3, si_unit: Sm3/d}]
+    higher_is_better: true
+    source: Calculations.AvgStreamGasRate_SSF_kSm3sd
+  # --- Volumes --------------------------------------------------------------
+  - id: oil_volume
+    label: Oil produced
+    unit: MSm3
+    kind: volume
+    terms: [{property: AvgOilRate, scale: 1.0e-6, si_unit: Sm3/d}]
+    higher_is_better: true
+    source: Yggdrasil_GAP_results.MonthlyOil_MSm3
+  - id: gas_volume
+    label: Gas produced
+    unit: GSm3
+    kind: volume
+    terms: [{property: AvgGasRate, scale: 1.0e-9, si_unit: Sm3/d}]
+    higher_is_better: true
+    source: Yggdrasil_GAP_results.MonthlyGas_GSm3
+  - id: water_volume
+    label: Water produced
+    unit: MSm3
+    kind: volume
+    terms: [{property: AvgWatRate, scale: 1.0e-6, si_unit: Sm3/d}]
+    higher_is_better: false
+    source: Yggdrasil_GAP_results.MonthlyWat_MSm3
+  - id: water_injection_volume
+    label: Water injected
+    unit: MSm3
+    kind: volume
+    terms: [{property: AvgWatInjRate, scale: 1.0e-6, si_unit: Sm3/d}]
+    source: Yggdrasil_GAP_results.MonthlyWatInj_MSm3
+  - id: oe_volume
+    label: Oil equivalent produced
+    unit: MSm3oe
+    kind: volume
+    terms: [{property: AvgOilRate, scale: 1.0e-6}, {property: AvgGasRate, scale: 1.0e-9}]
+    higher_is_better: true
+  - id: oe_volume_mmboe
+    label: Oil equivalent produced
+    unit: MMBOE
+    kind: volume
+    terms: [{property: AvgOilRate, scale: 6.28981e-6}, {property: AvgGasRate, scale: 6.28981e-9}]
+    higher_is_better: true
+  - id: sales_oe_volume_mmboe
+    label: Sales volume (placeholder factors)
+    unit: MMBOE
+    kind: volume
+    terms:
+      - {property: AvgOilRate, scale: 6.28981e-6, entity_factor: oil_sales_factor}
+      - {property: AvgGasRate, scale: 6.28981e-9, entity_factor: gas_sales_factor}
+    higher_is_better: true
+    placeholder: true
+    source: Yggdrasil_GAP_results.MonthlySalesTotal_40_MMBOE
+    description: >
+      TODO(engineer): Power BI converts SSF to sales (MSS) per well using split-factor sets
+      (oil swelling, gas shrinkage, NGL yield, GCV normalised to 40 MJ). Put the agreed factors in
+      entities.csv (oil_sales_factor, gas_sales_factor) or replace this measure.
+  - id: net_oe_volume_mmboe
+    label: Net oil equivalent (working interest)
+    unit: MMBOE
+    kind: volume
+    terms:
+      - {property: AvgOilRate, scale: 6.28981e-6, entity_factor: working_interest}
+      - {property: AvgGasRate, scale: 6.28981e-9, entity_factor: working_interest}
+    higher_is_better: true
+    source: Calculations.AvgTotalSales_BOEPD_ABP_Net
+  # --- Cumulatives ----------------------------------------------------------
+  - id: cum_oil
+    label: Cumulative oil
+    unit: MSm3
+    kind: cumulative
+    terms: [{property: CumOil, scale: 1.0e-6, si_unit: Sm3}]
+    higher_is_better: true
+  - id: cum_gas
+    label: Cumulative gas
+    unit: GSm3
+    kind: cumulative
+    terms: [{property: CumGas, scale: 1.0e-9, si_unit: Sm3}]
+    higher_is_better: true
+  - id: cum_water
+    label: Cumulative water
+    unit: MSm3
+    kind: cumulative
+    terms: [{property: CumWat, scale: 1.0e-6, si_unit: Sm3}]
+    higher_is_better: false
+  - id: cum_water_injection
+    label: Cumulative water injected
+    unit: MSm3
+    kind: cumulative
+    terms: [{property: CumWatInj, scale: 1.0e-6, si_unit: Sm3}]
+  # --- Ratios (always ratio of sums, never mean of ratios) ------------------
+  - id: gor
+    label: Gas-oil ratio
+    unit: Sm3/Sm3
+    kind: ratio
+    terms: [{property: GasRate}]
+    denominator: [{property: OilRate}]
+    source: Calculations.GOR_sm3sm3
+  - id: wct
+    label: Water cut
+    unit: "%"
+    kind: ratio
+    terms: [{property: WatRate, scale: 100}]
+    denominator: [{property: OilRate}, {property: WatRate}]
+    higher_is_better: false
+    source: Calculations.WCT_pct
+  - id: wgr
+    label: Water-gas ratio
+    unit: Sm3/MSm3
+    kind: ratio
+    terms: [{property: WatRate, scale: 1.0e6}]
+    denominator: [{property: GasRate}]
+    source: Calculations.WGR_sm3Msm3
+  - id: production_efficiency
+    label: Production efficiency (liquid)
+    unit: "%"
+    kind: ratio
+    terms: [{property: AvgOilRate, scale: 100}, {property: AvgWatRate, scale: 100}]
+    denominator: [{property: OilRate}, {property: WatRate}]
+    higher_is_better: true
+    source: Calculations.PE_Producers
+  # --- States (pressures, temperatures) -------------------------------------
+  - id: reservoir_pressure
+    label: Reservoir pressure
+    unit: bara
+    kind: state
+    terms: [{property: ResPres, si_unit: bara}]
+  - id: bottomhole_pressure
+    label: Bottomhole pressure
+    unit: bara
+    kind: state
+    terms: [{property: BHP, si_unit: bara}]
+  - id: wellhead_pressure
+    label: Wellhead pressure
+    unit: bara
+    kind: state
+    terms: [{property: WHP, si_unit: bara}]
+  - id: wellhead_temperature
+    label: Wellhead temperature
+    unit: degC
+    kind: state
+    terms: [{property: WHT, si_unit: degC}]
+  - id: manifold_pressure
+    label: Manifold pressure
+    unit: bara
+    kind: state
+    terms: [{property: ManPres, si_unit: bara}]
+  # --- Counts ---------------------------------------------------------------
+  - id: producing_wells
+    label: Producing wells
+    unit: wells
+    kind: count
+    terms: [{property: AvgOilRate}, {property: AvgGasRate}]
+    source: Calculations.ProdCount
+  - id: injecting_wells
+    label: Injecting wells
+    unit: wells
+    kind: count
+    terms: [{property: AvgWatInjRate}]
+    source: Calculations.InjCount

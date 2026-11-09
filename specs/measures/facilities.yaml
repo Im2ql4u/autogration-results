@@ -1,0 +1,32 @@
+# Facility measures (separators). Pipelines/flow assurance are not exported by Autogration yet.
+measures:
+  - id: separator_pressure
+    label: Separator pressure
+    unit: bara
+    kind: state
+    identifier_type: SEP
+    terms: [{property: Pres, si_unit: bara}]
+  - id: separator_temperature
+    label: Separator temperature
+    unit: degC
+    kind: state
+    identifier_type: SEP
+    terms: [{property: Temp, si_unit: degC}]
+  - id: separator_oil_rate
+    label: Separator oil rate
+    unit: Sm3/d
+    kind: rate
+    identifier_type: SEP
+    terms: [{property: AvgOilRate, si_unit: Sm3/d}]
+  - id: separator_gas_rate
+    label: Separator gas rate
+    unit: kSm3/d
+    kind: rate
+    identifier_type: SEP
+    terms: [{property: AvgGasRate, scale: 1.0e-3, si_unit: Sm3/d}]
+  - id: separator_water_rate
+    label: Separator water rate
+    unit: Sm3/d
+    kind: rate
+    identifier_type: SEP
+    terms: [{property: AvgWatRate, si_unit: Sm3/d}]

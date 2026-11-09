@@ -1,0 +1,8 @@
+# Health check thresholds (see src/autogration_results/health.py). TODO(engineer): tune.
+collapse_properties: [AvgLiqRate, AvgGasRate, AvgWatInjRate]
+collapse_identifier_type: WELL
+collapse_floor_fraction: 0.05   # below 5 % of the recent average ...
+collapse_lookback_months: 6     # ... of the previous 6 months ...
+collapse_min_months: 3          # ... for at least 3 timesteps
+collapse_min_rate: 50.0         # ignore wells averaging below this (SI units, Sm3/d)
+rate_property_pattern: "%Rate%"

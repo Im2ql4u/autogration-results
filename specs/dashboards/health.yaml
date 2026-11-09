@@ -1,0 +1,45 @@
+spec_version: 1
+id: health
+order: 20
+title: Run health
+question: Did anything fail, collapse or look suspicious?
+description: Automatic checks over every case before anyone trusts the numbers. Thresholds are in specs/health.yaml.
+sections:
+  - title: Status
+    visuals:
+      - id: health_kpis
+        type: health_summary
+      - id: matrix
+        type: health_matrix
+        title: Findings per case and check
+        width: 6
+      - id: oe_by_case_check
+        type: line
+        title: "Oil equivalent rate: look for cliffs and early ends"
+        measure: oe_rate
+        color: case
+        cases: all
+        width: 6
+  - title: Findings
+    visuals:
+      - id: findings
+        type: health_table
+        top_n: 200
+  - title: Where it happened
+    visuals:
+      - id: liquid_heatmap
+        type: heatmap
+        title: Liquid rate by year (focus case)
+        measure: liquid_rate
+        color: [entity.group, entity.field, identifier]
+        grain: year
+        cases: focus
+        top_n: 16
+        width: 6
+      - id: separator_pressure_check
+        type: line
+        title: Separator pressure by case
+        measure: separator_pressure
+        color: case
+        cases: all
+        width: 6

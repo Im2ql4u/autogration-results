@@ -1,0 +1,59 @@
+spec_version: 1
+id: compare
+order: 30
+title: Compare
+question: Is the focus case better than the baseline, and where does the difference come from?
+description: Pick the focus and baseline case in the filter bar.
+sections:
+  - title: Difference in headline numbers
+    visuals:
+      - id: delta_kpis
+        type: kpi
+        compare: delta
+        measures: [oe_volume_mmboe, oil_volume, gas_volume, water_volume, water_injection_volume]
+  - title: Profiles
+    visuals:
+      - id: pair_profile
+        type: line
+        title: Oil equivalent rate, focus vs baseline
+        measure: oe_rate
+        color: case
+        cases: pair
+        width: 6
+      - id: incremental_profile
+        type: column
+        title: Incremental oil equivalent rate (focus - baseline)
+        measure: oe_rate
+        compare: delta
+        grain: year
+        width: 6
+  - title: Where the difference comes from
+    visuals:
+      - id: waterfall_field
+        type: waterfall
+        title: Oil equivalent, baseline to focus, by field
+        measure: oe_volume_mmboe
+        x: [entity.field, entity.group, identifier]
+        width: 6
+      - id: waterfall_well
+        type: waterfall
+        title: Oil equivalent, baseline to focus, by well
+        measure: oe_volume_mmboe
+        x: identifier
+        width: 6
+  - title: All cases
+    visuals:
+      - id: rank
+        type: bar
+        title: Ranking of all cases
+        measure: oe_volume_mmboe
+        x: case
+        cases: all
+        width: 6
+      - id: case_table
+        type: table
+        title: Totals per case
+        rows: [case]
+        cases: all
+        measures: [oe_volume_mmboe, oil_volume, gas_volume, water_volume, water_injection_volume]
+        width: 6

@@ -1,0 +1,70 @@
+spec_version: 1
+id: wells
+order: 50
+title: Wells
+question: What is each well and well group doing?
+description: Focus case unless stated.
+sections:
+  - title: Contribution
+    visuals:
+      - id: oil_by_well
+        type: area
+        title: Oil rate by well (top 10)
+        measure: oil_rate
+        color: identifier
+        cases: focus
+        top_n: 10
+        width: 6
+      - id: volume_heatmap
+        type: heatmap
+        title: Oil equivalent volume by well and year
+        measure: oe_volume
+        color: identifier
+        grain: year
+        cases: focus
+        top_n: 20
+        width: 6
+  - title: Well behaviour
+    visuals:
+      - id: wct_by_well
+        type: line
+        title: Water cut by well (top 8)
+        measure: wct
+        color: identifier
+        cases: focus
+        grain: quarter
+        top_n: 8
+        width: 6
+      - id: gor_by_group
+        type: line
+        title: Gas-oil ratio by group
+        measure: gor
+        color: [entity.group, entity.field, identifier]
+        cases: focus
+        grain: quarter
+        top_n: 8
+        width: 6
+      - id: pressure_by_group
+        type: line
+        title: Reservoir pressure by group
+        measure: reservoir_pressure
+        color: [entity.group, entity.field, identifier]
+        cases: focus
+        top_n: 8
+        width: 6
+      - id: whp_by_group
+        type: line
+        title: Wellhead pressure by group
+        measure: wellhead_pressure
+        color: [entity.group, entity.field, identifier]
+        cases: focus
+        top_n: 8
+        width: 6
+  - title: Well table
+    visuals:
+      - id: well_totals
+        type: table
+        title: Totals per well (focus case)
+        rows: [identifier]
+        cases: focus
+        measures: [oil_volume, gas_volume, water_volume, water_injection_volume, oe_volume_mmboe]

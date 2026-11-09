@@ -1,0 +1,74 @@
+spec_version: 1
+id: overview
+order: 10
+title: Overview
+question: How does this study perform overall?
+description: Focus case against the baseline, then the production profile and how it splits.
+sections:
+  - title: Headline numbers
+    visuals:
+      - id: headline
+        type: kpi
+        title: Totals, focus vs baseline
+        compare: delta
+        measures: [oe_volume_mmboe, oil_volume, gas_volume, water_injection_volume, cum_water]
+      - id: peaks
+        type: kpi
+        title: Peaks
+        stat: max
+        compare: delta
+        measures: [oe_rate_boepd, oil_rate, gas_rate, producing_wells]
+  - title: Production profile
+    visuals:
+      - id: oe_profile_by_field
+        type: area
+        title: Oil equivalent rate by field (focus case)
+        measure: oe_rate
+        # First one the data has: field/group need reference data, wells always exist.
+        color: [entity.field, entity.group, identifier]
+        cases: focus
+        top_n: 8
+        width: 6
+      - id: oil_rate_by_case
+        type: line
+        title: Oil rate by case
+        measure: oil_rate
+        color: case
+        width: 6
+      - id: annual_volumes
+        type: column
+        title: Annual oil equivalent by field (focus case)
+        measure: oe_volume_mmboe
+        grain: year
+        color: [entity.field, entity.group, identifier]
+        cases: focus
+        top_n: 8
+        width: 6
+      - id: cum_oil_by_case
+        type: line
+        title: Cumulative oil by case
+        measure: cum_oil
+        color: case
+        width: 6
+  - title: Fluids
+    visuals:
+      - id: wct_by_case
+        type: line
+        title: Water cut by case
+        measure: wct
+        color: case
+        grain: quarter
+        width: 6
+      - id: gor_by_case
+        type: line
+        title: Gas-oil ratio by case
+        measure: gor
+        color: case
+        grain: quarter
+        width: 6
+      - id: sales_note
+        type: note
+        note: >-
+          Volumes are gross separator volumes. The Yggdrasil Power BI report shows sales volumes
+          (split factors, 40 MJ GCV) and net volumes (license working interest). Add
+          working_interest to the reference data to enable net volumes.
